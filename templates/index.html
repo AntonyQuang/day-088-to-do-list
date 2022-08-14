@@ -1,0 +1,33 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}To-Do List{% endblock %}
+
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="col-lg-4">
+        <h1>To Do</h1>
+        {% for task in tasks %}
+        <div class="card border border-primary border-3">
+            <div class="card-body">
+                <h4 class="card-title">{{ task.task }}</h4>
+                <p class=""card-text>{{ task.description }}</p>
+                <p>{{ task.date }}</p>
+                <a class="btn btn-primary" href="">Started</a>
+                <a class="btn btn-primary" href="">Completed</a>
+                <a class="btn btn-primary" href="">Edit</a>
+                <a class="btn btn-primary" href="">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
