@@ -1,30 +1,20 @@
 /* This CSS file will need to be added to the styling of 
 your web pages for the styles to be rendered. */
 
+/*|
 body {
 background-color: #333333;
 color: white;
 }
-
-.border-primary { border: 1px solid #007bff; }
+*/
 
 .card{
     padding: 2px;
     margin: 10px 0;
-    background-color: gray;
 }
 
 a {
     color: #ffc107;
-}
-
-.jumbotron {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  height: 100vh;
-  color: white;
-  background-color: #333;
 }
 
 .space-above {

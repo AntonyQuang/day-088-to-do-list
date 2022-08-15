@@ -1,4 +1,4 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}To-Do List{% endblock %}
 
@@ -6,28 +6,110 @@
 {% block styles %}
 {{super()}}
 <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 {% endblock %}
 
 {% block content %}
 
-<div class="container">
-    <div class="col-lg-4">
-        <h1>To Do</h1>
-        {% for task in tasks %}
-        <div class="card border border-primary border-3">
-            <div class="card-body">
-                <h4 class="card-title">{{ task.task }}</h4>
-                <p class=""card-text>{{ task.description }}</p>
-                <p>{{ task.date }}</p>
-                <a class="btn btn-primary" href="">Started</a>
-                <a class="btn btn-primary" href="">Completed</a>
-                <a class="btn btn-primary" href="">Edit</a>
-                <a class="btn btn-primary" href="">Delete</a>
-            </div>
+<nav class="navbar sticky-top navbar-expand-md bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#top">To Do List</a>
+        <!-- Dropdown button for when window gets too narrow -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+         <!-- Navigation Bar Items (ms-auto moves everything to the right) -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item me-auto">
+                    <a class="nav-link" href="{{ url_for('task_add') }}">Add Task</a>
+                </li>
+            </ul>
         </div>
-        {% endfor %}
     </div>
+</nav>
 
+<section id="top">
+
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1>To Do</h1>
+            {% for task in tasks %}
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ task.task }}</h4>
+                    <p class="card-text">{{ task.description }}</p>
+                    <p>Due Date: {{ task.date }}</p>
+                    <a class="btn btn-primary" href="{{ url_for('task_start', id=task.id) }}">Started</a>
+                    <a class="btn btn-primary" href="">Completed</a>
+                    <a class="btn btn-primary" href="">Edit</a>
+                    <a class="btn btn-primary" href="">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-4">
+            <h1>Ongoing</h1>
+            {% for task in ongoing_tasks %}
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ task.task }}</h4>
+                    <p class="card-text">{{ task.description }}</p>
+                    <p>Due Date: {{ task.date }}</p>
+                    <a class="btn btn-primary" href="">Completed</a>
+                    <a class="btn btn-primary" href="">Edit</a>
+                    <a class="btn btn-primary" href="">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-4">
+            <h1>Completed</h1>
+            {% for task in completed_tasks %}
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ task.task }}</h4>
+                    <p class="card-text">{{ task.description }}</p>
+                    <p>{{ task.date }}</p>
+                    <p>Date completed: {{ task.date_completed }}</p>
+                    <a class="btn btn-primary" href="">Edit</a>
+                    <a class="btn btn-primary" href="">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
 </div>
+
+<!-- Bootstrap Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
+<script>
+    // JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+</script>
 
 {% endblock %}
