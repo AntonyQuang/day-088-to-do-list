@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField
 from wtforms.validators import DataRequired, URL
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///to-do.db'
@@ -115,6 +115,36 @@ def task_add():
         return redirect(url_for("home"))
     return render_template('add.html', form=form)
     
+
+@app.route("/complete", methods=["GET", "POST"])
+def task_complete():
+    task_id = request.args.get('id')
+    task_selected = OngoingTasks.query.get(task_id)
+    db.session.delete(task_selected)
+    task_to_add = CompletedTasks(
+        task=task_selected.task,
+        description=task_selected.description,
+        date=task_selected.date,
+        date_completed=date.today(),
+    )
+    db.session.add(task_to_add)
+    db.session.commit()
+    return redirect(url_for("home"))
+
+@app.route("/supercomplete", methods=["GET", "POST"])
+def task_super_complete():
+    task_id = request.args.get('id')
+    task_selected = Tasks.query.get(task_id)
+    db.session.delete(task_selected)
+    task_to_add = CompletedTasks(
+        task=task_selected.task,
+        description=task_selected.description,
+        date=task_selected.date,
+        date_completed=date.today(),
+    )
+    db.session.add(task_to_add)
+    db.session.commit()
+    return redirect(url_for("home"))
 
 
 if __name__ == '__main__':
