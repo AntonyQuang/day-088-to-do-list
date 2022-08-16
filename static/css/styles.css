@@ -1,23 +1,69 @@
 /* This CSS file will need to be added to the styling of 
 your web pages for the styles to be rendered. */
 
-/*|
-body {
-background-color: #333333;
-color: white;
+ html {
+	 font-size: 18px;
+	 line-height: 1.5;
+	 font-weight: 300;
+	 color: #333;
+	 background-color: #eeeee4;
 }
-*/
+
+
+
+#todo {
+    padding-top: 2%;
+    background-color: #eeeee4;
+}
+
+.container  {
+    background-color: #eeeee4;
+}
+
+.btn-primary,  .btn-primary:active, .btn-primary:visited {
+    background-color: #87AAC4;
+    border-color: #71A7D1;
+}
+
+.btn-primary:hover {
+    background-color: #5181A6;
+    border-color: #71A7D1;
+}
+
+.justify {
+    text-align: center;
+}
 
 .card{
     padding: 2px;
     margin: 10px 0;
 }
 
-a {
-    color: #ffc107;
+#form {
+    background-color: #eeeee4;
+    padding-top: 2%;
 }
 
-.space-above {
-    margin-top: 20px;
-    padding-top: 20px;
+.form-group {
+    padding: 2% 0;
+}
+
+form .btn-default {
+    margin-top: 5%;
+    border-color: #71A7D1;
+    background-color: #87AAC4;
+    color: #fff;
+
+}
+
+form .btn-default:hover {
+    background-color: #5181A6;
+    color: #fff;
+}
+
+.control-label {
+	 font-size: 1.5rem;
+	 line-height: 1.5;
+	 color: #333;
+	 padding-bottom: 3%;
 }
