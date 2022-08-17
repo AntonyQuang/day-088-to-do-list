@@ -56,7 +56,7 @@ class CompletedTasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     task = db.Column(db.String(140), unique=True, nullable=False)
     description = db.Column(db.String(280), unique=False, nullable=True)
-    date = db.Column(db.DateTime, unique=False, nullable=True)
+    date = db.Column(db.Date, unique=False, nullable=True)
     date_completed = db.Column(db.Date, unique=False, nullable=False)
 
     def to_dict(self):
@@ -68,12 +68,21 @@ class CompletedTasks(db.Model):
 
 
 ## Only run this line once to create databases
-db.create_all()
+# db.create_all()
+
 
 class TaskForm(FlaskForm):
     task = StringField("Task", validators=[DataRequired()])
     description = StringField("Detailed Description")
     date = DateField("Due Date")
+    submit = SubmitField("Submit")
+
+
+class CompletedForm(FlaskForm):
+    task = StringField("Task", validators=[DataRequired()])
+    description = StringField("Detailed Description")
+    date = DateField("Due Date")
+    date_completed = DateField('Date completed')
     submit = SubmitField("Submit")
 
 
@@ -104,7 +113,6 @@ def task_start():
 def task_add():
     form = TaskForm()
     if form.validate_on_submit():
-        print(request.form.get("date"))
         new_task = Tasks(
             task=request.form.get("task"),
             description=request.form.get("description"),
@@ -119,7 +127,12 @@ def task_add():
 @app.route("/complete", methods=["GET", "POST"])
 def task_complete():
     task_id = request.args.get('id')
-    task_selected = OngoingTasks.query.get(task_id)
+    task_type = request.args.get('type')
+    
+    if task_type == "todo":
+        task_selected = Tasks.query.get(task_id)
+    else:
+        task_selected = OngoingTasks.query.get(task_id)
     db.session.delete(task_selected)
     task_to_add = CompletedTasks(
         task=task_selected.task,
@@ -131,21 +144,67 @@ def task_complete():
     db.session.commit()
     return redirect(url_for("home"))
 
-@app.route("/supercomplete", methods=["GET", "POST"])
-def task_super_complete():
+
+@app.route("/edit", methods=["GET", "POST"])
+def task_edit():
     task_id = request.args.get('id')
-    task_selected = Tasks.query.get(task_id)
-    db.session.delete(task_selected)
-    task_to_add = CompletedTasks(
-        task=task_selected.task,
-        description=task_selected.description,
-        date=task_selected.date,
-        date_completed=date.today(),
-    )
-    db.session.add(task_to_add)
+    task_type = request.args.get('type')
+
+    if task_type == "todo":
+        task_to_edit = Tasks.query.get(task_id)
+    elif task_type == "ongoing":
+        task_to_edit = OngoingTasks.query.get(task_id)
+    else:
+        task_to_edit = CompletedTasks.query.get(task_id)
+
+    if task_type == "todo" or task_type == "ongoing":
+        form = TaskForm(
+            task=task_to_edit.task,
+            description=task_to_edit.description,
+            date=task_to_edit.date
+        )
+        if form.validate_on_submit():
+            task_to_edit.task = request.form["task"]
+            task_to_edit.description = request.form["description"]
+            task_to_edit.date = datetime.strptime(request.form.get("date"), "%Y-%m-%d").date()
+            db.session.commit()
+            return redirect(url_for("home"))
+
+    else:
+        form = CompletedForm(
+            task=task_to_edit.task,
+            description=task_to_edit.description,
+            date=task_to_edit.date,
+            date_completed=task_to_edit.date_completed
+        )
+
+        if form.validate_on_submit():
+            task_to_edit.task = request.form["task"]
+            task_to_edit.description = request.form["description"]
+            task_to_edit.date = datetime.strptime(request.form.get("date"), "%Y-%m-%d").date()
+            task_to_edit.date_completed = datetime.strptime(request.form.get("date_completed"), "%Y-%m-%d").date()
+            db.session.commit()
+            return redirect(url_for("home"))
+
+    return render_template("edit.html", task=task_to_edit, form=form)
+
+
+@app.route("/delete", methods=["GET", "POST"])
+def task_delete():
+    task_id = request.args.get('id')
+    task_type = request.args.get('type')
+
+    if task_type == "todo":
+        task_to_delete = Tasks.query.get(task_id)
+    elif task_type == "ongoing":
+        task_to_delete = OngoingTasks.query.get(task_id)
+    else:
+        task_to_delete = CompletedTasks.query.get(task_id)
+
+    db.session.delete(task_to_delete)
     db.session.commit()
     return redirect(url_for("home"))
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
+#
+# if __name__ == '__main__':
+#     app.run(debug=True)

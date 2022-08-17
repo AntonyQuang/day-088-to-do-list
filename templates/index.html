@@ -51,9 +51,9 @@
                     <p class="card-text">{{ task.description }}</p>
                     <p>Due Date: {{ task.date }}</p>
                     <a class="btn btn-primary" href="{{ url_for('task_start', id=task.id) }}">Started</a>
-                    <a class="btn btn-primary" href="{{ url_for('task_super_complete', id=task.id) }}">Completed</a>
-                    <a class="btn btn-primary" href="">Edit</a>
-                    <a class="btn btn-primary" href="">Delete</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_complete', id=task.id, type='todo') }}">Completed</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_edit', id=task.id, type='todo') }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_delete', id=task.id, type='todo') }}">Delete</a>
                 </div>
             </div>
             {% endfor %}
@@ -67,9 +67,9 @@
                     <h4 class="card-title">{{ task.task }}</h4>
                     <p class="card-text">{{ task.description }}</p>
                     <p>Due Date: {{ task.date }}</p>
-                    <a class="btn btn-primary" href="{{ url_for('task_complete', id=task.id) }}">Completed</a>
-                    <a class="btn btn-primary" href="">Edit</a>
-                    <a class="btn btn-primary" href="">Delete</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_complete', id=task.id, type='ongoing') }}">Completed</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_edit', id=task.id, type='ongoing') }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_delete', id=task.id, type='ongoing') }}">Delete</a>
                 </div>
             </div>
             {% endfor %}
@@ -82,10 +82,10 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ task.task }}</h4>
                     <p class="card-text">{{ task.description }}</p>
-                    <p>{{ task.date }}</p>
+                    <p>Due Date: {{ task.date }}</p>
                     <p>Date completed: {{ task.date_completed }}</p>
-                    <a class="btn btn-primary" href="">Edit</a>
-                    <a class="btn btn-primary" href="">Delete</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_edit', id=task.id, type='complete') }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ url_for('task_delete', id=task.id, type='complete') }}">Delete</a>
                 </div>
             </div>
             {% endfor %}
